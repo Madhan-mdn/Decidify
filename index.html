@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Decidify</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Layout Wrapper -->
+  <div class="app-container">
+    
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <svg class="logo-icon-svg" viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="2" />
+          <path d="M12 4v16M4 12h16M6.34 6.34l11.32 11.32M6.34 17.66l11.32-11.32" stroke="currentColor" stroke-width="1.2" />
+          <circle cx="12" cy="12" r="2" fill="currentColor" stroke="none" />
+          <path d="M12 1.5l2.5 3h-5z" fill="currentColor" stroke="none" />
+        </svg>
+        <h2 class="sidebar-title">Decidify</h2>
+        <button class="close-sidebar-btn" id="closeSidebarBtn" aria-label="Close Navigation">&times;</button>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="#dashboard" class="nav-item active" data-page="dashboard">
+          <span class="nav-icon">🏠</span> Dashboard
+        </a>
+        <a href="#generator" class="nav-item" data-page="generator">
+          <span class="nav-icon">🎲</span> Generator
+        </a>
+        <a href="#history" class="nav-item" data-page="history">
+          <span class="nav-icon">📜</span> History
+        </a>
+        <a href="#favorites" class="nav-item" data-page="favorites">
+          <span class="nav-icon">❤️</span> Favorites
+        </a>
+        <a href="#settings" class="nav-item" data-page="settings">
+          <span class="nav-icon">⚙️</span> Settings
+        </a>
+      </nav>
+
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      
+      <!-- Top Mobile Navigation Bar -->
+      <header class="top-nav">
+        <button class="menu-toggle-btn" id="menuToggleBtn" aria-label="Open Navigation">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+        <h1 class="page-title" id="pageTitle">Dashboard</h1>
+
+      </header>
+
+      <!-- View Containers -->
+      <div class="view-container">
+
+        <!-- 1. DASHBOARD VIEW -->
+        <section id="dashboardView" class="page-view active-view">
+          <div class="welcome-banner">
+            <h2>👋 Welcome back to Decidify!</h2>
+            <p>Stuck on a decision? We've got your back. Select a mode and let random chance make the call.</p>
+          </div>
+
+          <!-- Dashboard Stats Grid -->
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-icon bg-purple">📊</div>
+              <div class="stat-info">
+                <h3>Total Decisions</h3>
+                <p id="dashTotalDecisions">0</p>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon bg-success">📂</div>
+              <div class="stat-info">
+                <h3>Total Categories</h3>
+                <p id="dashTotalCategories">0</p>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon bg-warning">⭐</div>
+              <div class="stat-info">
+                <h3>Favorite Category</h3>
+                <p id="dashFavCategory">None yet</p>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon bg-info">📅</div>
+              <div class="stat-info">
+                <h3>Weekly Decisions</h3>
+                <p id="dashWeeklyDecisions">0</p>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon bg-pink">🏆</div>
+              <div class="stat-info">
+                <h3>Most Selected Option</h3>
+                <p id="dashMostSelectedOption">None yet</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dashboard Main Sections -->
+          <div class="dash-layout">
+            <!-- Left: Actions & Stats Visuals -->
+            <div class="dash-left-column">
+              <!-- Quick Generate -->
+              <div class="card">
+                <div class="card-header">
+                  <h3>⚡ Quick Generate</h3>
+                </div>
+                <div class="card-body">
+                  <p class="helper-text">Pick a random option instantly from your first non-empty category.</p>
+                  <div class="quick-gen-controls">
+                    <select id="dashQuickGenCategory" class="form-control">
+                      <option value="">-- Choose Category --</option>
+                    </select>
+                    <button id="dashQuickGenBtn" class="btn btn-primary">Quick Pick!</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Mini Stats (Canvas / Bars) -->
+              <div class="card">
+                <div class="card-header">
+                  <h3>📊 Category Insights</h3>
+                </div>
+                <div class="card-body">
+                  <div class="canvas-container">
+                    <canvas id="statsChart" width="300" height="150"></canvas>
+                  </div>
+                  <div class="progress-stats-container" id="progressStatsContainer">
+                    <!-- Progress bars render dynamically here -->
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right: Recent Activity -->
+            <div class="dash-right-column">
+              <div class="card full-height">
+                <div class="card-header flex-header">
+                  <h3>📜 Recent Decisions</h3>
+                  <a href="#history" class="view-all-link" id="dashViewAllHistoryLink">View All</a>
+                </div>
+                <div class="card-body">
+                  <div class="table-responsive">
+                    <table class="simple-table">
+                      <thead>
+                        <tr>
+                          <th>Category</th>
+                          <th>Selected Option</th>
+                          <th>Mode</th>
+                          <th>Time</th>
+                        </tr>
+                      </thead>
+                      <tbody id="dashRecentDecisionsBody">
+                        <tr>
+                          <td colspan="4" class="text-center text-muted">No recent decisions. Try making one!</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 2. DECISION GENERATOR VIEW -->
+        <section id="generatorView" class="page-view">
+          <div class="generator-layout">
+            
+            <!-- Category Management Panel -->
+            <div class="card category-panel">
+              <div class="card-header flex-header">
+                <h3>📂 Categories</h3>
+                <button class="btn btn-sm btn-primary" id="newCategoryBtn">+ Add New</button>
+              </div>
+              <div class="card-body">
+                <div class="search-box">
+                  <input type="text" id="categorySearchInput" placeholder="Search categories..." class="form-control search-input">
+                </div>
+                <div class="category-list" id="categoryListContainer">
+                  <!-- Render category items dynamically -->
+                </div>
+              </div>
+            </div>
+
+            <!-- Option Management & Runner Panel -->
+            <div class="card options-panel">
+              <div class="card-header flex-header" id="optionsPanelHeader">
+                <h3 id="selectedCategoryTitle">Select a Category</h3>
+                <div class="category-action-buttons" style="display:none;" id="categoryActionsGroup">
+                  <button class="btn btn-sm btn-secondary" id="editCategoryBtn">✏️ Edit</button>
+                  <button class="btn btn-sm btn-danger" id="deleteCategoryBtn">🗑️ Delete</button>
+                </div>
+              </div>
+              <div class="card-body" id="optionsPanelBody" style="display:none;">
+                
+                <!-- Option Input Form -->
+                <div class="option-form-container">
+                  <label for="newOptionInput"><strong>Add Option</strong></label>
+                  <div class="input-group">
+                    <input type="text" id="newOptionInput" class="form-control" placeholder="Enter option name (e.g., Pizza)...">
+                    <button class="btn btn-success" id="addOptionBtn">Add</button>
+                  </div>
+                  <div class="error-message" id="optionInputError"></div>
+                </div>
+
+                <!-- Options List Container -->
+                <div class="search-box">
+                  <input type="text" id="optionSearchInput" placeholder="Search options..." class="form-control search-input">
+                </div>
+                <div class="options-list-header">
+                  <span>Option Name</span>
+                  <span id="optionsHeaderWeight" style="display:none;">Weight</span>
+                  <span>Actions</span>
+                </div>
+                <div class="options-list" id="optionsListContainer">
+                  <!-- Render options dynamically -->
+                </div>
+
+                <hr class="section-divider">
+
+                <!-- Decision Runner Configuration -->
+                <div class="decision-runner-config">
+                  <h4>🧠 Choose Decision Mode</h4>
+                  <div class="mode-grid">
+                    <label class="mode-card active">
+                      <input type="radio" name="decisionMode" value="random" checked>
+                      <span class="mode-icon">🎯</span>
+                      <span class="mode-name">Random Pick</span>
+                    </label>
+                    <label class="mode-card">
+                      <input type="radio" name="decisionMode" value="spin">
+                      <span class="mode-icon">🎡</span>
+                      <span class="mode-name">Spin Wheel</span>
+                    </label>
+                    <label class="mode-card">
+                      <input type="radio" name="decisionMode" value="elimination">
+                      <span class="mode-icon">❌</span>
+                      <span class="mode-name">Elimination</span>
+                    </label>
+                    <label class="mode-card">
+                      <input type="radio" name="decisionMode" value="weighted">
+                      <span class="mode-icon">⚖️</span>
+                      <span class="mode-name">Weighted</span>
+                    </label>
+                  </div>
+
+                  <div class="runner-action">
+                    <button class="btn btn-primary btn-lg btn-block" id="generateDecisionBtn">🎲 Generate Decision! (Ctrl+Enter)</button>
+                    <div class="error-message text-center" id="generatorRunError"></div>
+                  </div>
+                </div>
+
+              </div>
+              <div class="card-body text-center text-muted" id="optionsPanelPlaceholder">
+                <div style="padding: 40px 0;">
+                  <span style="font-size: 3rem;">📂</span>
+                  <p style="margin-top: 15px;">Please select an existing category from the list or create a new one to manage options and generate decisions.</p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+
+        <!-- 3. HISTORY VIEW -->
+        <section id="historyView" class="page-view">
+          <div class="card">
+            <div class="card-header flex-header">
+              <h3>📜 Decision Log History</h3>
+              <button class="btn btn-danger btn-sm" id="clearAllHistoryBtn">🗑️ Clear All History</button>
+            </div>
+            <div class="card-body">
+              <div class="history-filter-bar">
+                <div class="search-box flex-grow">
+                  <input type="text" id="historySearchInput" placeholder="Search by category, option, or mode..." class="form-control search-input">
+                </div>
+                <div class="filter-group">
+                  <select id="historyFilterMode" class="form-control">
+                    <option value="">All Modes</option>
+                    <option value="random">Random Pick</option>
+                    <option value="spin">Spin Wheel</option>
+                    <option value="elimination">Elimination</option>
+                    <option value="weighted">Weighted</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="table-responsive">
+                <table class="simple-table">
+                  <thead>
+                    <tr>
+                      <th>Date</th>
+                      <th>Time</th>
+                      <th>Category</th>
+                      <th>Decision Mode</th>
+                      <th>Selected Option</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="historyTableBody">
+                    <!-- Dynamic entries render here -->
+                  </tbody>
+                </table>
+              </div>
+              
+              <div class="empty-state text-center text-muted" id="historyEmptyState" style="display:none;">
+                <p style="padding: 30px;">No matching history records found.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 4. FAVORITES VIEW -->
+        <section id="favoritesView" class="page-view">
+          <div class="card">
+            <div class="card-header">
+              <h3>❤️ Saved Favorites</h3>
+            </div>
+            <div class="card-body">
+              <p class="helper-text">Your hand-picked options. You can quickly trigger decisions using these items or remove them from list.</p>
+              
+              <div class="favorites-grid" id="favoritesGridContainer">
+                <!-- Favorites render here as cards -->
+              </div>
+
+              <div class="empty-state text-center text-muted" id="favoritesEmptyState" style="display:none;">
+                <div style="padding: 40px 0;">
+                  <span style="font-size: 3rem;">❤️</span>
+                  <p style="margin-top: 15px;">No favorites saved yet. Once you make a decision, click "Save to Favorites" in the result screen.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 5. SETTINGS VIEW -->
+        <section id="settingsView" class="page-view">
+          <div class="settings-grid-layout">
+            
+            <!-- Preferences -->
+            <div class="card">
+              <div class="card-header">
+                <h3>⚙️ Application Preferences</h3>
+              </div>
+              <div class="card-body">
+                <div class="settings-row">
+                  <div class="settings-info">
+                    <h4>Light / Dark Mode</h4>
+                    <p class="helper-text">Toggle between light gray and dark themes.</p>
+                  </div>
+                  <div class="settings-action">
+                    <label class="switch">
+                      <input type="checkbox" id="themeToggleCheckbox">
+                      <span class="slider"></span>
+                    </label>
+                  </div>
+                </div>
+
+                <hr class="settings-divider">
+
+                <div class="settings-row">
+                  <div class="settings-info">
+                    <h4>Animations</h4>
+                    <p class="helper-text">Enable or disable spin and elimination animations.</p>
+                  </div>
+                  <div class="settings-action">
+                    <label class="switch">
+                      <input type="checkbox" id="animationToggleCheckbox" checked>
+                      <span class="slider"></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Data & Backup -->
+            <div class="card">
+              <div class="card-header">
+                <h3>💾 Data & Backups</h3>
+              </div>
+              <div class="card-body">
+                <p class="helper-text">Export your categories, options, favorites, and history to a JSON file, or restore from a backup file.</p>
+                
+                <div class="backup-actions">
+                  <button class="btn btn-secondary" id="exportDataBtn">📥 Export Data (JSON)</button>
+                  
+                  <div class="import-section">
+                    <label for="importFileControl" class="btn btn-secondary btn-file-label">
+                      📤 Import Data (JSON)
+                    </label>
+                    <input type="file" id="importFileControl" accept=".json" style="display:none;">
+                    <span id="importFileName" class="import-file-name text-muted">No file selected</span>
+                  </div>
+                </div>
+
+                <div class="error-message" id="importStatusMessage"></div>
+              </div>
+            </div>
+
+            <!-- Danger Zone -->
+            <div class="card danger-card">
+              <div class="card-header bg-danger-light">
+                <h3>⚠️ Danger Zone</h3>
+              </div>
+              <div class="card-body">
+                <p>Resetting the application will permanently delete all categories, options, favorites, history log, and statistics. This action is irreversible.</p>
+                <div style="margin-top: 15px;">
+                  <button class="btn btn-danger" id="resetAppBtn">Reset Application Data</button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- ==================== MODALS & OVERLAYS ==================== -->
+
+  <!-- A. Result & Animation Modal -->
+  <div class="modal-overlay" id="resultModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="resultModalHeaderTitle">Decision Result</h3>
+        <button class="modal-close-btn" id="closeResultModalBtn">&times;</button>
+      </div>
+      <div class="modal-body text-center">
+        
+        <!-- Spinning Wheel Screen -->
+        <div id="wheelAnimationContainer" style="display: none;">
+          <h4 class="animation-status-label">🎡 Spinning the Wheel...</h4>
+          <div class="wheel-box">
+            <canvas id="wheelCanvas" width="300" height="300"></canvas>
+            <div class="wheel-pointer">▼</div>
+          </div>
+        </div>
+
+        <!-- Elimination Mode Screen -->
+        <div id="eliminationAnimationContainer" style="display: none;">
+          <h4 class="animation-status-label" id="eliminationStatusLabel">❌ Eliminating Options...</h4>
+          <div class="elimination-list" id="eliminationVisualList">
+            <!-- Items appear, get crossed out with delays -->
+          </div>
+        </div>
+
+        <!-- Final Result Screen (Appears after animation or instantly) -->
+        <div id="finalResultDisplay" style="display: none;">
+          <div class="winner-trophy">🎉</div>
+          <p class="winner-label">And the winner is...</p>
+          <h1 class="winner-title" id="winnerTitleDisplay">Pizza</h1>
+          
+          <div class="winner-metadata">
+            <p><strong>Category:</strong> <span id="winnerCategoryDisplay">Food</span></p>
+            <p><strong>Mode:</strong> <span id="winnerModeDisplay">Random Pick</span></p>
+          </div>
+
+          <div class="winner-actions-grid">
+            <button class="btn btn-success" id="resultSaveFavoriteBtn">❤️ Save to Favorites</button>
+            <button class="btn btn-secondary" id="resultCopyBtn">📋 Copy Result</button>
+            <button class="btn btn-primary" id="resultAgainBtn">🔄 Generate Again</button>
+          </div>
+          <div class="success-toast" id="resultModalToast"></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- B. Category Input / Edit Modal -->
+  <div class="modal-overlay" id="categoryModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="categoryModalTitle">Add New Category</h3>
+        <button class="modal-close-btn" id="closeCategoryModalBtn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="categoryNameInput">Category Name</label>
+          <input type="text" id="categoryNameInput" class="form-control" placeholder="e.g., Food, Movies, Travel...">
+          <div class="error-message" id="categoryInputError"></div>
+        </div>
+        <div class="modal-actions">
+          <button class="btn btn-secondary" id="cancelCategoryModalBtn">Cancel</button>
+          <button class="btn btn-primary" id="saveCategoryModalBtn">Save Category</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <script src="script.js"></script>
+</body>
+</html>
