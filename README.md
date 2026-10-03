@@ -28,3 +28,35 @@ Decidify is an interactive decision-making web application designed to help user
 
 ```bash
 git clone https://github.com/YOUR_USERNAME/Decidify.git
+
+
+
+## Project Preview
+
+### Dashboard
+
+![Dashboard](Screenshots/Dashboard.png)
+
+### Decision Generator
+
+![Generator](Screenshots/Generator.png)
+
+### Favorites
+
+![Generator](Screenshots/Favorites.png)
+
+### History
+
+![History](Screenshots/History.png)
+
+### Settings
+
+![Generator](Screenshots/Settings.png)
+
+### Dark Mode
+
+![Dark Mode](Screenshots/Dark_Mode.png)
+
+### Spin Wheel
+
+![Generator](Screenshots/Spin_Wheel.png)
